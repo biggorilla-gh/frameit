@@ -1,13 +1,16 @@
-# FrameIt2
+FrameIt2
+--------
 FrameIts is a system for creating custom frames for text corpora.
-Currently FrameIt2 uses Python3 + Spacy2
+FrameIt2 uses Python3 + Spacy2
 
-## Installation
+Installation
+------------
 $ pip install virtualenv . (if you're using virtualenv to create an environment, another way is conda)
 
 
-## Running Project
-
+Quick start instructions
+------------------------
+Create a virtual environment
 First you need to create a virtual environment the usual way. For those unfamiliar with the workflow, it is shown below.
 ```
 $ cd <path/to/framit/project>  
@@ -34,7 +37,7 @@ $ python -m spacy download en_core_web_lg
 ```
 $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 ```
-\# Running the Notebook after install is complete
+\# Running the notebooks in notebooks/Generic_frame_training_notebooks after install is complete
 
 \# Optional if code has changed
 ```
