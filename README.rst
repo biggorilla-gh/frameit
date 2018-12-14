@@ -59,18 +59,7 @@ $ python -m spacy download en_core_web_lg
 $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 ```
 
-\# Running the notebooks in notebooks/Generic_frame_training_notebooks after install is complete
-
-\# Optional if code has changed
-
-```
-$ git pull --rebase   
-```
-
-```
-$ source env_frameit/bin/activate   
-$ jupyter notebook  
-```
+\# Running the notebooks in the folder "Generic frame training notebooks" after install is complete
 
 
 * Free software: Apache Software License 2.0
