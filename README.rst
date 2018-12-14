@@ -54,10 +54,16 @@ $ jupyter notebook
 Features
 --------
 
-* TODO
+* Intent detection using a CNN model
+* Attribute extraction paired with intents using either CNN or heuristic models
+* SRL system allows for loading multiple Frames for intent detection simultaneously, allowing for the differentiation of similar domains
+* Easy to train and customize using jupyter notebooks
+* Evaluation scripts for convenient experimental design and iteration
 
 Credits
 -------
+
+FrameIt was designed by Megagon Labs
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
