@@ -59,7 +59,7 @@ $ python -m spacy download en_core_web_lg
 $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 ```
 
-\# Running the notebooks in the folder "Generic frame training notebooks" after install is complete
+\# Run the notebooks in the folder "Generic frame training notebooks" after install is complete and follow the instructions there. Generic frame exploration includes code to both collect data for a Frame for intent detection, as well as a call to a training function that will combine exploration data from that notebook and (optionally) data for entity-extraction from the other two notebooks to create a Frame that can be saved to a file and loaded in python.
 
 
 * Free software: Apache Software License 2.0
