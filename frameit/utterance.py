@@ -25,6 +25,10 @@ class Utterance(object):
             self.id = _id
         self.sent_num = sent_num
         self.frames = None
+        if lang not in Utterance.class_nlp.keys():
+           t = TextProcessing()
+           t.add_language(lang)
+           Utterance.class_nlp = t.nlp
         self.nlp = Utterance.class_nlp[lang]
         # if type(Utterance.nlp) is dict:
             # Utterance.nlp = Utterance.nlp[self.lang]
