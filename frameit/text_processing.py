@@ -25,7 +25,7 @@ class TextProcessing(metaclass=Singleton):
             'ja': 'ja_sudachipy_wikipedia'
         }
         self.nlp_dict = {}
-        self.add_language('en')
+        # self.add_language('en')
         self.nlp = self.nlp_dict
         self.lemmatizer = spacy.lemmatizer.Lemmatizer()
 
