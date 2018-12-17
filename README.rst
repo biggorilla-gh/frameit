@@ -1,63 +1,75 @@
-# FrameIt2
+FrameIt2
+--------
 FrameIts is a system for creating custom frames for text corpora.
-Currently FrameIt2 uses Python3 + Spacy2
+FrameIt2 uses Python3 + Spacy2
 
-## Installation
+Features
+--------
+
+* Intent detection using a CNN model
+* Attribute extraction paired with intents using either CNN or heuristic models
+* SRL system allows for loading multiple Frames for intent detection simultaneously, allowing for the differentiation of similar domains
+* Easy to train and customize using jupyter notebooks
+* Evaluation scripts for convenient experimental design and iteration
+
+Installation
+------------
 $ pip install virtualenv . (if you're using virtualenv to create an environment, another way is conda)
 
 
-## Running Project
+Quick start instructions
+------------------------
+Create a virtual environment
 
 First you need to create a virtual environment the usual way. For those unfamiliar with the workflow, it is shown below.
+
 ```
 $ cd <path/to/framit/project>  
 $ virtualenv --python=/usr/bin/python3.6 env_frameit 
 ```
+
 Or conda create --name framers python=3.6
+
 ```
 $ source env_frameit/bin/activate
 ```
+
 or (if you're using conda) 
+
 ```$
 $ source activate framers 
 ```
+
 Install the FrameIt2 module
+
 ```
 $ pip install -U -e .
 ```
-\# Install spacy language model  
+
+\# Install spacy language model 
+
 ```
 $ python -m spacy download en
 $ python -m spacy download en_core_web_lg
 ```
-\# Enable widgets for the notebook may be required if the loading widget doesn't work    
+
+\# Enable widgets for the notebook may be required if the loading widget doesn't work
+
 ```
 $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 ```
-\# Running the Notebook after install is complete
 
-\# Optional if code has changed
-```
-$ git pull --rebase   
-```
-
-```
-$ source env_frameit/bin/activate   
-$ jupyter notebook  
-```
+\# Running the notebooks in the folder "Generic frame training notebooks" after install is complete
 
 
 * Free software: Apache Software License 2.0
 * Documentation: https://frameit.readthedocs.io.
 
 
-Features
---------
-
-* TODO
-
 Credits
 -------
+
+FrameIt was designed by Megagon Labs
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
