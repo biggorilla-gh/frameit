@@ -6,22 +6,20 @@ FrameIt2 uses Python3 + Spacy2
 Features
 --------
 
-* Intent detection using a CNN model
-* Attribute extraction paired with intents using either CNN or heuristic models
+* Intent detection for individual sentences using a CNN model
+* Entity extraction paired with intents using either CNN or heuristic models
 * SRL system allows for loading multiple Frames for intent detection simultaneously, allowing for the differentiation of similar domains
 * Easy to train and customize using jupyter notebooks
 * Evaluation scripts for convenient experimental design and iteration
 
-Installation
+Data Requirements
 ------------
-$ pip install virtualenv . (if you're using virtualenv to create an environment, another way is conda)
+In order to ensure accurate results, we recommend training frames with a positive data set that has at least 400 examples. Depending on the domain that you are training for, you may be able to train effective frames with as few as 100 positive examples, but behavior may be less predictable. Provide 1,000+ examples for optimal results.
 
 
-Quick start instructions
+Installation and quick start instructions
 ------------------------
-Create a virtual environment
-
-First you need to create a virtual environment the usual way. For those unfamiliar with the workflow, it is shown below.
+After cloning the repository, set up a virtual environment. For those unfamiliar with the workflow, it is shown below.
 
 ```
 $ cd <path/to/framit/project>  
@@ -36,7 +34,7 @@ $ source env_frameit/bin/activate
 
 or (if you're using conda) 
 
-```$
+```
 $ source activate framers 
 ```
 
