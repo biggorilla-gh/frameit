@@ -22,6 +22,7 @@ Installation and quick start instructions
 After cloning the repository, set up a virtual environment. For those unfamiliar with the workflow, it is shown below.
 
 ::
+
     $ cd <path/to/framit/project>  
     $ virtualenv --python=/usr/bin/python3.6 env_frameit 
 
