@@ -92,30 +92,10 @@ def writeGoldSet(gold_set, session_id, old_filename, file_prefix, prefix):
 
 def recompileTrainingFile(training_dictionary, column_names, session_id, filename, file_name, prefix):
 	print('Recompiling training file')
-	# out = pandas.DataFrame(columns = column_names)
 	out_list = []
-	# for key in training_dictionary.keys():
-		# out.append(list(training_dictionary[key]))
-		# print (list(training_dictionary[key]))
-		# print (type(training_dictionary[key]))
-		# row = training_dictionary[key]
-		# out_list.append(pandas.Series([row], index=column_names))
-		# print(row)
-		# pandas.concat([out, row])
-		# tmp = pandas.Series([row], index=column_names)
-		# print(tmp)
-		# out.append(tmp, ignore_index=True)
-	# out = pandas.DataFrame(out_list, columns=column_names)
-	# for v in training_dictionary.values():
-		# print (v)
-		# break
 	print("file_prefix ",file_name)
 	out = pandas.DataFrame(list(training_dictionary.values()), columns=column_names)
-	# s.reset_index()
 	new_filename = prefix + filename[filename.rindex('/'):-4] + file_name + '_drop_v'+str(session_id) + '.csv'
 	out.to_csv(new_filename, sep=',')
 	return new_filename
 
-# dropRepeats('../resources/hm_indexed.csv', '../evaluation_data/exercise_semi_gold_set.xml', 'exercise_gold_set.xml', 100)
-# dropRepeats('../resources/hm_indexed.csv', 'meal_semi_gold_set.xml', 'meal_gold_set.xml', 100)
-# dropRepeats('../resources/hm_indexed.csv', 'conversation_gold_set.xml', 'conversation_gold_set.xml', 100)

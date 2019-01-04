@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<meal>
+ <positive index="13">I ate a delicious <Food>chocolate sundae</Food> </positive>
+ <positive index="67">Sat down to eat a hot <Food>breakfast</Food> with my <Person>wife</Person> </positive>
+ <positive index="4">My <Person>husband</Person> and I after working dinner day cooking together while my <Person>daughter</Person> had about how was your day at school.</positive>
+ <positive index="15">Early morning in the beach having <Food>breakfast</Food> with the <Person>family</Person> </positive>
+ <positive index="37">I had a lovely <Food>lunch</Food> with my <Person>mother</Person> </positive>
+ <positive index="79">My <Person>wife</Person> has dinner ready for me when I get home.</positive>
+ <positive index="45">I was able to eat dinner with my <Person>girlfriend</Person> </positive>
+ <negative index="17">I got a new pet kitten.</negative>
+ <negative index="18">I travelled through public transport today.</negative>
+ <negative index="19">Walking out of the gym after a vigorous workout.</negative>
+ <negative index="20">Opening the front door in the middle of the day, just to feel the humid breeze coming in from the ocean</negative>
+ <negative index="21">The day when i purchased halo 4 five days early to play for xbox.</negative>
+</meal>
