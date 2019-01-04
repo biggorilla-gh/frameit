@@ -1,7 +1,7 @@
-FrameIt2
+FrameIt
 ========
-FrameIts is a system for creating custom frames for text corpora.
-FrameIt2 uses Python3 + Spacy2
+FrameIt is a system for creating custom frames for text corpora.
+FrameIt uses Python3 + Spacy2
 
 Features
 --------
