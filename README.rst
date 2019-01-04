@@ -29,24 +29,28 @@ After cloning the repository, set up a virtual environment. For those unfamiliar
 Or conda create --name framers python=3.6
 
 ::
+
     $ source env_frameit/bin/activate
 
 
 or (if you're using conda) 
 
 ::
+
     $ source activate framers 
 
 
 Install the FrameIt2 module
 
 ::
+
     $ pip install -U -e .
 
 
 \# Install spacy language model 
 
 ::
+
     $ python -m spacy download en
     $ python -m spacy download en_core_web_lg
 
@@ -54,7 +58,8 @@ Install the FrameIt2 module
 \# Enable widgets for the notebook may be required if the loading widget doesn't work
 
 ::
-$ jupyter nbextension enable --py --sys-prefix widgetsnbextension
+
+    $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 
 \# Run the notebooks in the folder "Generic frame training notebooks" after install is complete and follow the instructions there. Generic frame exploration includes code to both collect data for a Frame for intent detection, as well as a call to a training function that will combine exploration data from that notebook and (optionally) data for entity-extraction from the other two notebooks to create a Frame that can be saved to a file and loaded in python.
@@ -64,6 +69,7 @@ Using a saved frame
 Once you've trained a Frame and saved it to a file, you can load it with the following Python code:
 
 ::
+
     from frameit import SRL, Frame
     srl = SRL()
     frame = Frame.load('your_frame.json')
@@ -72,11 +78,13 @@ Once you've trained a Frame and saved it to a file, you can load it with the fol
 Then you can evaluate sentences with the frame by calling srl.parse:
 
 ::
+
     srl.parse('A string you want to evaluate')
 
 which will return a list of dictionaries (one for each frame that detected its intent in the string) with information about the frame detected and any extracted attributes.
 
 ::
+
     [Sentence: A string you want to evaluate
         Frame: Your Frame Name
         Confidence: 0.74228173
