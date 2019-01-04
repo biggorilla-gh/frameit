@@ -1,5 +1,5 @@
 FrameIt2
---------
+========
 FrameIts is a system for creating custom frames for text corpora.
 FrameIt2 uses Python3 + Spacy2
 
