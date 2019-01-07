@@ -14,6 +14,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     "Flask==1.0.2",
+    "jupyter==1.0.0",
     "Keras==2.2.4",
     "nltk==3.4",
     "numpy==1.15.4",
