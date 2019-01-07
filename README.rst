@@ -31,7 +31,9 @@ After cloning the repository, set up a virtual environment. For those unfamiliar
     $ virtualenv --python=/usr/bin/python3.6 env_frameit 
 
 
-Or conda create --name framers python=3.6
+Or 
+::
+    $ conda create --name env_frameit python=3.6
 
 ::
 
