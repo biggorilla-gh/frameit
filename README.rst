@@ -41,12 +41,14 @@ or (if you're using conda)
     $ source activate framers 
 
 
-Install the FrameIt2 module
+Install the FrameIt module
+
 
 ::
 
     $ pip install -U -e .
 
+Note: The first time you run pip install in a new environment, the code will build 1 GB of /.egg files necessary for organizing various packages for FrameIt. This may take several minutes depending on your hardware.
 
 \# Install spacy language model 
 
