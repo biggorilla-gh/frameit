@@ -13,16 +13,17 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    "flask",
-    "keras",
-    "nltk",
-    "numpy",
-    "pandas",
-    "scikit-learn",
-    "scipy",
+    "Flask==1.0.2",
+    "Keras==2.2.4",
+    "nltk==3.4",
+    "numpy==1.15.4",
+    "pandas==0.23.4",
+    "msgpack==0.5.6",
+    "scikit-learn==0.20.2",
+    "scipy==1.2.0",
     "spacy==2.0.12",
-    "tensorflow",
-    "whoosh"]
+    "tensorflow==1.12.0",
+    "Whoosh==2.7.4"]
 
 setup(
     author="BigGorilla",
