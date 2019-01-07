@@ -3,6 +3,10 @@ FrameIt
 FrameIt is a system for creating custom frames for text corpora.
 FrameIt uses Python3 + Spacy2
 
+For an in-depth explanation of the FrameIt system architecture, please see http://www.aclweb.org/anthology/W18-6123
+Full citation:
+Dan Iter, Alon Halevy, Wang-Chiew Tan. FrameIt: Ontology Discovery for Noisy User-Generated Text. In Proceedings of the 2018 EMNLP Workshop W-NUT: The 4th Workshop on Noisy User-generated Text, Pages 173-183
+
 Features
 --------
 
