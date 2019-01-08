@@ -9,9 +9,27 @@ import uuid
 import os
 from xml.dom import minidom
 
-#given a training data file and corresponding labeled xml gold file, sample sample_size 
-#examples from gold_file and remove duplicates from train_file.
+
 def dropGold(train_file, positive_examples, negative_examples, sample_size=-1, is_random=None, index_column_name=0, prefix='', file_prefix=''):
+	'''
+	removes gold-set examples from the training set
+	Parameters:
+	train_file: the filename of the corpus to be used for training
+
+	positive_examples: the filename of an xml file containing gold positive examples
+
+	negative_examples:  the filename of an xml file containing gold negative examples. Note that if you have positive and negative gold examples in the same file, you can pass the same file to both parameters (the script checks for whether the examples are labeled as positive or negative)
+
+	sample_size: default -1, in which case the script will use the entire gold set. If you would prefer to use a random subset of the gold set, provide an integer of the desired size.
+
+	is_random: default None, which causes the script to use a random seed for sampling. If passed an integer, it will use that integer as a seed, allowing for deterministic output.
+
+	index_column_name: default 0, set the column number for the column in the data set that contains the index.
+
+	prefix: default empty string, set the file hierarchy prefix for the desired output files (e.g. "../resources")
+
+	file_prefix: default empty string, set any desired prefix to be added to the output filenames. This is useful if you want to label your data set with a date or other identifiable name.
+	'''
 	if is_random is None:
 		seed = random.randint(0,100)
 		set_seed(seed)
@@ -85,6 +103,9 @@ def dropGold(train_file, positive_examples, negative_examples, sample_size=-1, i
 	return new_training_file, gold_file
 
 def indexTrainingFile(file, index_column_name):
+	'''
+	Converts the training file into a hash map for easy access and modification
+	'''
 	out = {}
 	print('Indexing data file')
 	with open(file, 'rb') as training_file:
@@ -98,6 +119,9 @@ def indexTrainingFile(file, index_column_name):
 	return out, column_names
 
 def writeGoldSet(gold_set, session_id, old_filename, file_prefix, prefix):
+	'''
+	Writes the gold set to a file
+	'''
 	print('Writing gold set to xml file')
 	filename = prefix + file_prefix + 'gold_examples' + str(session_id) + '.xml'
 	with open(filename, 'w') as file:
@@ -109,6 +133,9 @@ def writeGoldSet(gold_set, session_id, old_filename, file_prefix, prefix):
 	return filename
 
 def recompileTrainingFile(training_dictionary, column_names, session_id, filename, file_name, prefix):
+	'''
+	Converts the modified training set backinto a csv for use by FrameIt
+	'''
 	print('Recompiling training file')
 	out_list = []
 	print("file_prefix ",file_name)

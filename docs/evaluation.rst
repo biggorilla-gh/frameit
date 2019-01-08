@@ -54,3 +54,27 @@ index_column_name: default 0, set the column number for the column in the data s
 prefix: default empty string, set the file hierarchy prefix for the desired output files (e.g. "../resources")
 
 file_prefix: default empty string, set any desired prefix to be added to the output filenames. This is useful if you want to label your data set with a date or other identifiable name.
+
+data_to_xml_with_attributes.py documentation
+--------------------------------------------
+
+This class converts a CSV containing labeled data into an XML file in the gold set data format
+
+Parameters
+----------
+
+		Convert a CSV file with data labeled for a frame intent and attributes into an XML file for use as a gold set
+		filename: the string name of the CSV file to be converted into a gold XML set
+		id_col: column number (int) or name (str) corresponding to a column with a unique identifier in the csv
+		results_col: column number (int) or name (str) corresponding to the column with frame intent labels
+		confidence_col: column number (int) or name (str) corresponding to a confidence value for the frame intent result
+		original_index_col: column number (int) or name (str) for the column containing indices
+		text_col: column number (int) or name (str) corresponding to a column with the actual sentence data points in string form
+		label_confidence_col: column number (int) or name (str) for the column containing confidence values for entity labels
+		confidence_threshold: float, sets a confidence threshold. Examples with labels that have lower confidence than the threshold will be ignored. 
+		attribute_index: column number (int) or name (str) for the column containing entity labels
+		use_confidence: bool, if True uses the confidence_threshold. If False, all examples will be added to the gold set regardless of confidence
+		target: string, file prefix for output file
+		indices: bool. Set to True if using indices in the input file.
+
+		

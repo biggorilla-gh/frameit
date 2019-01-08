@@ -17,7 +17,6 @@ import logging
         self.attrs[attr].append((token, conf))
 
     def get_state(self):
-        # print(self.__str__())
         state = {'frame': self.frame.name}
         state['slots'] = {}
         for attr, tokens in self.attrs.items():

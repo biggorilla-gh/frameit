@@ -9,53 +9,25 @@ import xml.dom.minidom
 import argparse
 import math
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument('filename', help='filename of csv to be converted')
-# parser.add_argument('results_col', help='name of column containing result labels')
-# parser.add_argument('--text', help='name of the text column')
-# parser.add_argument('--ignore_confidence', '-i', help=' set boolean to ignore confidence threshold, default False')
-# parser.add_argument('--confidence_value', '-c', '-cv', type=float, help='confidence threshold for labels')
-# parser.add_argument('--attribute_col', '-a', help='name of column containing attribute info')
-# parser.add_argument('--target', '-t', help='Filename prefix of output files')
-# parser.add_argument('--ref', '-n', help='False if its not needed to created referencing ids')
-# args = parser.parse_args()
-
-# def main(args):
-# 	if args.target:
-# 		target = args.target
-# 	else:
-# 		target=""
-# 	if args.text:
-# 		text = args.text
-# 		original_index = 0
-# 	else:
-# 		text = 20
-# 		original_index = 9
-# 	if args.ignore_confidence:
-# 		if args.ignore_confidence != 'False':
-# 			print('Ignoring confidence metrics')
-# 			use_confidence = False
-# 		else:
-# 			use_confidence = True
-# 	else:
-# 		use_confidence = True
-
-# 	indices = True
-# 	if args.ref: 
-# 		if args.ref == 'False':
-# 			indices = False
-# 		else: 
-# 			indices = True
-
-# 	if args.confidence_value:
-# 		print('running with custom threshold')
-# 		CsvToXML(args.filename, results_col=args.results_col, original_index_col =original_index,  text_col=text, confidence_threshold=args.confidence_value, target=target, indices=indices)
-# 	else:
-# 		CsvToXML(args.filename, results_col=args.results_col, original_index_col =original_index, text_col=text,use_confidence=use_confidence, target=target, indices=indices)
-
 class AttributeCsvToXML:
 	def __init__(self, filename, id_col=0, results_col=16, confidence_col=6,original_index_col=9,
 		text_col=20,label_confidence_col=8,confidence_threshold=0.6,attribute_index='locations',use_confidence=True,target=None, indices=True):
+		'''
+		Convert a CSV file with data labeled for a frame intent and attributes into an XML file for use as a gold set
+		filename: the string name of the CSV file to be converted into a gold XML set
+		id_col: column number (int) or name (str) corresponding to a column with a unique identifier in the csv
+		results_col: column number (int) or name (str) corresponding to the column with frame intent labels
+		confidence_col: column number (int) or name (str) corresponding to a confidence value for the frame intent result
+		original_index_col: column number (int) or name (str) for the column containing indices
+		text_col: column number (int) or name (str) corresponding to a column with the actual sentence data points in string form
+		label_confidence_col: column number (int) or name (str) for the column containing confidence values for entity labels
+		confidence_threshold: float, sets a confidence threshold. Examples with labels that have lower confidence than the threshold will be ignored. 
+		attribute_index: column number (int) or name (str) for the column containing entity labels
+		use_confidence: bool, if True uses the confidence_threshold. If False, all examples will be added to the gold set regardless of confidence
+		target: string, file prefix for output file
+		indices: bool. Set to True if using indices in the input file.
+
+		'''
 		with open(filename, 'rb') as csvfile:
 			self.data = pandas.read_csv(csvfile, header=0)
 			self.filename = filename
@@ -81,9 +53,6 @@ class AttributeCsvToXML:
 			self.intermediate_files = self.convertFramesToXML()
 	
 	def addColumnNumbers(self):
-		# old_data_filename = '../resources/hm_indexed.csv'
-		# old_text_column = 'text'
-		# old_index_column = 'Index'
 		old_data_filename = self.filename
 		old_text_column = self.text_col
 		old_index_column = self.original_index_col
@@ -109,8 +78,6 @@ class AttributeCsvToXML:
 		return out
 
 	def splitIntoFrames(self,original_index_col):
-		# print(self.data[self.id_col])
-		# print(self.data.loc[0,0])
 		dict_of_frames = dict()
 		for frame_name in self.frame_names:
 			pos = str(frame_name) + '_pos'
@@ -118,9 +85,6 @@ class AttributeCsvToXML:
 			dict_of_frames[pos] = set()
 			dict_of_frames[neg] = set()
 		for index, row in self.data.iterrows():
-			# if isinstance(self.data.loc[index,self.original_index_col], str):
-				# print(self.data.loc[index,self.original_index_col])
-			# print(str(self.data.loc[index,8'0']))
 			if not math.isnan(self.data.loc[index,original_index_col]):
 				row['_unit_id'] = int(self.data.loc[index,original_index_col])
 			else:
@@ -142,24 +106,18 @@ class AttributeCsvToXML:
 		return dict_of_frames
 
 	def convertFramesToXML(self):
-		# print (self.original_index_col)
 		ret = []
 		for frame in self.frame_names:
 			print("Processing frame: ", frame)
 			root = ET.Element(str(frame))
-			# ET.SubElement(root, "field1")
 			positive_set_name = str(frame) + '_pos'
 			negative_set_name = str(frame) + '_neg'
 			for item in self.frames_dict[positive_set_name]:
-				# if not isinstance(item[self.id_col], int):
-					# print("Possible exception: ", item[self.id_col])
-					# continue
 				ET.SubElement(root, 'positive', index=str(item[self.id_col])).text = item[self.text_col]
 			for item in self.frames_dict[negative_set_name]:
 				ET.SubElement(root, 'negative', index=str(item[self.id_col])).text = item[self.text_col]
 			tree = ET.ElementTree(root)
 			filename = str(self.target)+ str(frame) + '-semi_gold_set.xml'
-			# print(ET.tostring(tree.getroot(),'utf-8')[0:50])
 			out = xml.dom.minidom.parseString(ET.tostring(tree.getroot(),'utf-8')).toprettyxml(indent=" ")
 			replacements = {'&lt;': '<', '&gt;':'>'}
 			for src, target in replacements.items():
@@ -169,10 +127,7 @@ class AttributeCsvToXML:
 				f.write(out)
 			ret.append(filename)
 		return ret
-			# tree.write(filename)
 	def addAttributeNotation(self, row):
-		# print(row[self.attribute_index])
-		# print(type(row[self.attribute_index]))
 		if isinstance(row[self.attribute_index], float) :
 			return row[self.text_col]
 		crowdflower_notation = row[self.attribute_index].split('\n')
@@ -185,7 +140,6 @@ class AttributeCsvToXML:
 				if float(confidence[i]) < self.confidence_threshold:
 					continue
 			mod = 0
-			# end_att_name_index = att.index(':')
 			begin_att_type_index = att.rfind(':')+1
 			end_att_name_index = att[:begin_att_type_index-1].rfind(':')
 			att_name = att[:end_att_name_index]
@@ -198,17 +152,8 @@ class AttributeCsvToXML:
 			open_xml_string = '<'+ att_type + '>'
 			close_xml_string = '</' + att_type + '> '
 			xml_addition = open_xml_string + att_name + close_xml_string
-			# print(xml_addition)
-			# print(row[self.text_col])
+
 			modified_text = text[:span[0]-1+mod] + xml_addition + text[span[1]+mod:]
 			completed.append([span_start,len(open_xml_string)+len(close_xml_string)-1])
 			text = modified_text
-		# print(text)
 		return text
-
-
-
-
-# main(args)
-
-# CsvToXML('../Notebooks/Jo_Workspace/labeled_data/hm_labeled_aggregate.csv', results_col='hm_intents_results')
