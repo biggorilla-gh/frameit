@@ -134,7 +134,7 @@ def trim_examples(positive_utterances, remove_list):
     return new_positive_set, negative_set
 
 def save_frame_training_info_to_file(frame_name, corpus_file, positive_utterances, negative_set, 
-                                    scale_to, epochs, batch_size, reg_param, filename):
+                                    scale_to, epochs, batch_size, reg_param, filename, gold_filename):
     pos_list = list()
     neg_list = list()
     for utterance in positive_utterances:
@@ -148,7 +148,8 @@ def save_frame_training_info_to_file(frame_name, corpus_file, positive_utterance
              "scale_to": scale_to,
              "epochs": epochs,
              "batch_size": batch_size,
-             "reg_param": reg_param
+             "reg_param": reg_param,
+             "gold_file": gold_filename
             }
     with open(filename, 'w') as outfile:
         json.dump(save_data, outfile)

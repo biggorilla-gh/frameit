@@ -11,7 +11,7 @@ from xml.dom import minidom
 
 #given a training data file and corresponding labeled xml gold file, sample sample_size 
 #examples from gold_file and remove duplicates from train_file.
-def dropRepeats(train_file, positive_examples, negative_examples, sample_size, is_random=None, index_column_name=0, prefix='', file_prefix=''):
+def dropGold(train_file, positive_examples, negative_examples, sample_size=-1, is_random=None, index_column_name=0, prefix='', file_prefix=''):
 	if is_random is None:
 		seed = random.randint(0,100)
 		set_seed(seed)
@@ -26,41 +26,59 @@ def dropRepeats(train_file, positive_examples, negative_examples, sample_size, i
 	negative_list = negative_xml.getElementsByTagName('negative')
 	gold_set = set()
 	training_dict, column_names = indexTrainingFile(train_file, index_column_name)
-	for i in range(0,sample_size):
-		pos_choice = random.choice(positive_list)
-		neg_choice = random.choice(negative_list)
-		while pos_choice in gold_set:
+	#Default mode: use all gold examples
+	if sample_size < 0:
+		for ex in positive_list + negative_list:
+			gold_set.add(ex)
+			if 'index' in ex.attributes.keys():
+				ind = ex.attributes['index'].value 
+			else:
+				ind = ex.attributes['id'].value
+			if isinstance(ind, int):
+				del training_dict[ind]
+			elif isinstance(ind, str):
+				if int(ind) in training_dict.keys():
+					del training_dict[int(ind)]
+			else:
+				print('Caught exception, ' + str(ind))
+				print(type(ind))
+	#Sampling mode: use a random sample of gold examples
+	else:
+		for i in range(0,sample_size):
 			pos_choice = random.choice(positive_list)
-		while neg_choice in gold_set:
 			neg_choice = random.choice(negative_list)
-		gold_set.add(pos_choice)
-		gold_set.add(neg_choice)
-		if 'index' in pos_choice.attributes.keys():
-			ind = pos_choice.attributes['index'].value 
-		else:
-			ind = pos_choice.attributes['id'].value
+			while pos_choice in gold_set:
+				pos_choice = random.choice(positive_list)
+			while neg_choice in gold_set:
+				neg_choice = random.choice(negative_list)
+			gold_set.add(pos_choice)
+			gold_set.add(neg_choice)
+			if 'index' in pos_choice.attributes.keys():
+				ind = pos_choice.attributes['index'].value 
+			else:
+				ind = pos_choice.attributes['id'].value
 
-		if 'index' in neg_choice.attributes.keys():
-			neg_ind = neg_choice.attributes['index'].value
-		else:
-			neg_ind = neg_choice.attributes['id'].value
+			if 'index' in neg_choice.attributes.keys():
+				neg_ind = neg_choice.attributes['index'].value
+			else:
+				neg_ind = neg_choice.attributes['id'].value
 
-		if isinstance(ind, int):
-			del training_dict[ind]
-		elif isinstance(ind, str):
-			if int(ind) in training_dict.keys():
-				del training_dict[int(ind)]
-		else:
-			print('Caught exception, ' + str(ind))
-			print(type(ind))
-		if isinstance(neg_ind, int):
-			del training_dict[neg_ind]
-		elif isinstance(neg_ind, str):
-			if int(neg_ind) in training_dict.keys():
-				del training_dict[int(neg_ind)]
-		else:
-			print('Caught exception, ' + str(neg_ind))
-			print(type(neg_ind))
+			if isinstance(ind, int):
+				del training_dict[ind]
+			elif isinstance(ind, str):
+				if int(ind) in training_dict.keys():
+					del training_dict[int(ind)]
+			else:
+				print('Caught exception, ' + str(ind))
+				print(type(ind))
+			if isinstance(neg_ind, int):
+				del training_dict[neg_ind]
+			elif isinstance(neg_ind, str):
+				if int(neg_ind) in training_dict.keys():
+					del training_dict[int(neg_ind)]
+			else:
+				print('Caught exception, ' + str(neg_ind))
+				print(type(neg_ind))
 	new_training_file = recompileTrainingFile(training_dict, column_names, session_id, train_file, file_prefix, prefix)
 	gold_file = writeGoldSet(gold_set,session_id,positive_examples, file_prefix, prefix)
 	print('Done')

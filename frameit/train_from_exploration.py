@@ -23,6 +23,7 @@ def train_frame_wrapper(frame_outfile_name,
     attributes = []
     with open(frame_file, 'r') as infile:
         frame_schema = json.load(infile)
+    gold_file = frame_schema["gold_file"]
     corp = Corpus(frame_schema["corpus_file"])
     print('Importing machine learning attributes')
     for ml_attribute_file in ml_attr_files:
@@ -37,6 +38,8 @@ def train_frame_wrapper(frame_outfile_name,
     print('Saving frame to file')
     frame.save(frame_outfile_name)
     print('Done!')
+    print("Corresponding gold file is ", gold_file)
+    return gold_file
 
 def train_ml_attribute(corpus, file):
     with open(file, 'r') as infile:
