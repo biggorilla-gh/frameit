@@ -25,7 +25,6 @@ class TextProcessing(metaclass=Singleton):
             'ja': 'ja_sudachipy_wikipedia'
         }
         self.nlp_dict = {}
-        # self.add_language('en')
         self.nlp = self.nlp_dict
         self.lemmatizer = spacy.lemmatizer.Lemmatizer()
 
@@ -116,33 +115,7 @@ class TextProcessing(metaclass=Singleton):
                                         break
                                 candidates.append((token, found_chunk, utterance))
         return candidates
-
-    '''
-    def extract_time_candidates(self, utterance, parent_constraints,
-                           candidate_constraints):
-        candidates = []
-        for token in utterance:
-            for obj in parent_constraints:
-                if self.check_constraints(token, obj):
-                    for child in token.children:
-                        doc_child = self.get_doc(child, utterance)
-                        for cand in candidate_constraints:
-                            if self.check_constraints(doc_child, cand):
-                                if child.lefts:
-                                    for l in child.lefts:
-                                        if self.check_constraints(l, cand):
-                                            for chunk in utterance.noun_chunks:
-                                                if l in chunk:
-                                                    candidates.append((l, chunk, utterance))
-                                                    break
-                                    continue
-                                else:
-                                    for chunk in utterance.noun_chunks:
-                                        if child in chunk:
-                                            candidates.append((child, chunk, utterance))
-        return candidates
-    '''
-
+        
     def get_doc(self, token, utterance):
         for tok in utterance:
             if tok.text == token.text:

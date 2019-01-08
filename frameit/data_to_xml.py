@@ -7,43 +7,22 @@ import xml.etree.cElementTree as ET
 import xml.dom.minidom
 import argparse
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument('filename', help='filename of csv to be converted')
-# parser.add_argument('results_col', help='name of column containing result labels')
-# parser.add_argument('--text', help='name of the text column')
-# parser.add_argument('--ignore_confidence', '-i', help=' set boolean to ignore confidence threshold, default False')
-# parser.add_argument('--confidence_value', '-c', '-cv', type=float, help='confidence threshold for labels')
-# parser.add_argument('--target', '-t', help='Filename prefix of output files')
-# args = parser.parse_args()
-
-# def main(args):
-# 	if args.target:
-# 		target = args.target
-# 	else:
-# 		target=""
-# 	if args.text:
-# 		text = args.text
-# 		original_index = 0
-# 	else:
-# 		text = 9
-# 		original_index = 7
-# 	if args.ignore_confidence:
-# 		if args.ignore_confidence != 'False':
-# 			print('Ignoring confidence metrics')
-# 			use_confidence = False
-# 		else:
-# 			use_confidence = True
-# 	else:
-# 		use_confidence = True
-# 	if args.confidence_value:
-# 		print('running with custom threshold')
-# 		CsvToXML(args.filename, results_col=args.results_col, original_index_col =original_index,  text_col=text, confidence_threshold=args.confidence_value, target=target)
-# 	else:
-# 		CsvToXML(args.filename, results_col=args.results_col, original_index_col =original_index, text_col=text,use_confidence=use_confidence, target=target)
-
 class CsvToXML:
 	def __init__(self, filename, id_col=0, results_col=5, confidence_col=6,original_index_col=7,
 		text_col=9,confidence_threshold=0.6,use_confidence=True,target=None):
+		'''
+		Convert a CSV file with data labeled for a frame intent and attributes into an XML file for use as a gold set
+		filename: the string name of the CSV file to be converted into a gold XML set
+		id_col: column number (int) or name (str) corresponding to a column with a unique identifier in the csv
+		results_col: column number (int) or name (str) corresponding to the column with frame intent labels
+		confidence_col: column number (int) or name (str) corresponding to a confidence value for the frame intent result
+		original_index_col: column number (int) or name (str) for the column containing indices
+		text_col: column number (int) or name (str) corresponding to a column with the actual sentence data points in string form
+		confidence_threshold: float, sets a confidence threshold. Examples with labels that have lower confidence than the threshold will be ignored. 
+		use_confidence: bool, if True uses the confidence_threshold. If False, all examples will be added to the gold set regardless of confidence
+		target: string, file prefix for output file
+
+		'''
 		with open(filename, 'rb') as csvfile:
 			self.data = pandas.read_csv(csvfile, header=0)
 			self.id_col = self.data.columns.get_loc(id_col) if type(id_col) == str else id_col

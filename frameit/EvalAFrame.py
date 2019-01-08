@@ -8,13 +8,28 @@ class EvalToken:
         self.idx = idx
 
 def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attribute=False, limit=5, skip=None, fuzzy=False, generous=False):
-    # frame_filename = 'DirectionsFrame.json'        
+    '''
+    frame_filename: file where trained frame is stored
+
+    gold_filename: xml file of examples correctly labeled for a positive or negative match of the frame, as well as annotated for attributes
+
+    verbose_frame: boolean, if True script prints debug information about Frame for each sentence. Default False
+
+    verbose_attribte: boolean, if True script prints debug information about attribute matches for each sentence. Default False
+    limit: int, sets cap on number of messages to print in verbose mode. Default 5.
+
+    skip: specify names of attributes to ignore in evaluation. Default None
+
+    fuzzy: bool, if True, attributes extracted which are substrings of the gold-data attribute are ignored when calculating accuracy (normally they would be considered incorrect answers). Default False.
+
+    generous: bool, only used if fuzzy is also True. If True, fuzzy answers are instead counted as correct answers. Default False.
+
+    '''
     frame = Frame.load(frame_filename)
 
     srl = SRL()
     srl.addFrame(frame)
 
-    # gold_filename = './test_data/DirectionsValidation.xml'
     tree = ET.parse(gold_filename)
     root = tree.getroot()
 
@@ -46,19 +61,14 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                     print_count += 1
             else:
                 true_negatives += 1
-                # if verbose and print_count < limit:
-                    # print('True negative: ', text)
-                    # print_count += 1
             continue
 
         label = FrameLabel(frame, Utterance(text, 1), 1.0)
         if sent.text == None:
-            # print('caught None sentence text')
             continue
         offset = len(sent.text)  # character offset in the sentence
         for a in sent:
             if frame.getAttribute(a.tag) is None:
-                # print('caught None getAttribute')
                 continue
             label.add_attr(frame.getAttribute(a.tag), EvalToken(a.text, offset), 1)
             offset += len(a.text)
@@ -87,8 +97,7 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                 extracted_attributes[key.name] = set()
             for token in label.attrs[key]:
                 gold_attributes[key.name].add(token[0].text)
-            # print(key.name)
-            # print('Status 1: ', gold_attributes[key.name])
+
         for srl_key in srl_label.attrs.keys():
             if skip is not None:
                 if srl_key.name in skip:
@@ -96,7 +105,6 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
             if srl_key.name not in attr_result_dict.keys():
                 attr_result_dict[srl_key.name] = [0,0,0]
             if srl_key.name not in gold_attributes.keys():
-                # print("Missing key")
                 gold_attributes[srl_key.name] = set()
             if srl_key.name not in extracted_attributes.keys():
                 extracted_attributes[srl_key.name] = set()
@@ -114,13 +122,9 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
             for key in extracted_attributes.keys():
                 attr_result_dict[key][0] += len(extracted_attributes[key])
                 individual_attr_true_pos_count += len(extracted_attributes[key])
-            # if verbose_frame and print_count < limit:
-                # print('True positive: ', text)
-                # print_count += 1
         else:
             attr_mismatches += 1
             for key2 in gold_attributes.keys():
-                # print('status 2: ', gold_attributes[key2])
                 for gold_token in gold_attributes[key2]:
                     if gold_token in extracted_attributes[key2]:
                         individual_attr_true_pos_count += 1
@@ -140,7 +144,6 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                                     print('Excusing fuzzy missed attribute: ')
                                     print('Sentence: ', text)
                                     print('Got {0}, wanted {1}\n'.format(extracted_attributes[key2], gold_token))
-                                    # print_count += 1
                                 continue
                         individual_attr_false_neg_count += 1
                         attr_result_dict[key2][2] += 1
@@ -150,9 +153,6 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                             print('Got {0}, wanted {1}\n'.format(extracted_attributes[key2], gold_token))
                             print_count += 1
             for key3 in extracted_attributes.keys():
-                # print('status 3: ', gold_attributes[key3])
-                # print('Gold: ', gold_attributes.keys())
-                # print('SRL: ', extracted_attributes.keys())
                 for extracted_token in extracted_attributes[key3]:
                     if extracted_token not in gold_attributes[key3]:
                         if fuzzy:
@@ -169,8 +169,7 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                                     print('Excusing fuzzy false positive: ')
                                     print('Sentence: ', text)
                                     print('Got {0}, wanted {1}\n'.format(extracted_token, gold_attributes[key2]))
-                                    # print_count += 1
-                                continue
+=                                continue
                         individual_attr_false_pos_count += 1
                         attr_result_dict[key3][1] += 1
                         if verbose_attribute and print_count < limit:
@@ -179,9 +178,6 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                             print('Sentence: ', text)
                             print('Got {0}, wanted {1}\n'.format(extracted_token, gold_attributes[key3]))
                             print_count += 1
-            # if verbose_frame and print_count < limit:
-                # print('Mismatch: %s vs %s' % (str(srl_label), str(label)))
-                # print_count += 1
 
     print('true_positives = ', true_positives)
     print('true_negatives = ', true_negatives)

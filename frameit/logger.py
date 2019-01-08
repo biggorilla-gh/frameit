@@ -9,8 +9,6 @@ def create_logger(name, debug=True):
     new_logger = logging.Logger(name)
 
     ch = logging.StreamHandler()
-    # formatter = logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT)
-    # ch.setFormatter(formatter)
 
     if debug:
         ch.setLevel(logging.DEBUG)
@@ -19,7 +17,6 @@ def create_logger(name, debug=True):
 
     new_logger.addHandler(ch)
 
-    # logname = config.logs + str(datetime.datetime.utcnow()) + '.txt'
     logname = 'frameit/api/logs/logs.txt'
     logging.basicConfig(filename=logname,
                         filemode='a',

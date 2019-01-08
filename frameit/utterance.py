@@ -30,11 +30,6 @@ class Utterance(object):
            t.add_language(lang)
            Utterance.class_nlp = t.nlp
         self.nlp = Utterance.class_nlp[lang]
-        # if type(Utterance.nlp) is dict:
-            # Utterance.nlp = Utterance.nlp[self.lang]
-            # Utterance.nlp.vocab.add_flag(lambda s: s.lower() in STOP_WORDS, spacy.attrs.IS_STOP)
-        # if Utterance.nlp == None:
-            # Utterance.nlp = TextProcessing(lang=lang).nlp[lang]
 
     def clean(self, text):
         single_line = text.replace('\n', '.').replace('\r', '.')

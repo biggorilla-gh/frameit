@@ -126,7 +126,6 @@ def trim_examples(positive_utterances, remove_list):
                 match = True
                 break
         if not match:
-    #         print(utterance.text)
             new_positive_set.add(utterance)
         else:
             negative_set.add(utterance)

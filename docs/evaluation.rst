@@ -1,4 +1,4 @@
-Evaluation (EvalAFrame.py) script documentation
+evalFrame (EvalAFrame.py) script documentation
 ------------------------
 
 Parameters
@@ -32,6 +32,25 @@ Note that positive examples can also have entities labeled (in this case <Exerci
 <negative index="2049">I chatted with Julia today.</negative>
 </wrapper>
 
+
+prepare_train_and_test_data.py documentation
+-----------------------------------------
+Calls (data_to_xml or data_to_xml_with_attributes) and drop_gold_from_train to prepare gold test data and training sets that do not include it
+input file should have header:
+_unit_id |		frame_name |frame_confidence |	locations    |	attribute_confidence |	original_index	| text|
+
+Takes following command line arguments:
+annotated_file: positional, string filename of crowd-labeled to provide a subset that will be converted to gold set xml
+--attributes', '-a': boolean, default True, if True adds attribute labeling to xml
+--confidence', '-c':boolean, default True, if True only uses confidence values above a threhhold (default .6)
+--confidence_value', '-cv': float, default 0.6, set a custome threshold
+--prefix', '-p': Set a string file prefix for all files to be written by this script, default \"../resources/prepared_data/\"
+--use_index', '-i': boolean, default True, if false will not attempt to recompile indices
+--training_file', '-t': string, filename of file to be used for training that needs duplicates with test set dropped. Default \"../resources/hm_indexed.csv\"
+--size', '-s': int, set size of gold set, default 100
+--tfile_index', '-ti': string, default \"0\", name of column containing indices in training file
+
+
 drop_gold_from_train documentation
 -------------------------------
 
@@ -55,15 +74,14 @@ prefix: default empty string, set the file hierarchy prefix for the desired outp
 
 file_prefix: default empty string, set any desired prefix to be added to the output filenames. This is useful if you want to label your data set with a date or other identifiable name.
 
-data_to_xml_with_attributes.py documentation
+data_to_xml_with_attributes.py and data_to_xml.py documentation
 --------------------------------------------
 
-This class converts a CSV containing labeled data into an XML file in the gold set data format
+These classes converts a CSV containing labeled data into an XML file in the gold set data format. data_to_xml_with_attributes takes a csv with attribute and intent labeling as input, data_to_xml takes a csv with intent labeling but without attribute labeling as input.
 
-Parameters
-----------
+Parameters data_to_xml_with_attributes.py
+----------------------------------------
 
-		Convert a CSV file with data labeled for a frame intent and attributes into an XML file for use as a gold set
 		filename: the string name of the CSV file to be converted into a gold XML set
 		id_col: column number (int) or name (str) corresponding to a column with a unique identifier in the csv
 		results_col: column number (int) or name (str) corresponding to the column with frame intent labels
@@ -77,4 +95,14 @@ Parameters
 		target: string, file prefix for output file
 		indices: bool. Set to True if using indices in the input file.
 
-		
+Parameters data_to_xml.py
+----------------------------------------
+filename: the string name of the CSV file to be converted into a gold XML set
+		id_col: column number (int) or name (str) corresponding to a column with a unique identifier in the csv
+		results_col: column number (int) or name (str) corresponding to the column with frame intent labels
+		confidence_col: column number (int) or name (str) corresponding to a confidence value for the frame intent result
+		original_index_col: column number (int) or name (str) for the column containing indices
+		text_col: column number (int) or name (str) corresponding to a column with the actual sentence data points in string form
+		confidence_threshold: float, sets a confidence threshold. Examples with labels that have lower confidence than the threshold will be ignored. 
+		use_confidence: bool, if True uses the confidence_threshold. If False, all examples will be added to the gold set regardless of confidence
+		target: string, file prefix for output file
