@@ -116,7 +116,6 @@ class Model(CoreModel):
                     break
                 x_pred[i][j] = t.vector
 
-        # print(len(x_pred))
         labels = self.model.predict(x_pred)
         return labels
 

@@ -19,7 +19,6 @@ class ContextModel(CoreModel):
 
     def train(self, pos_set, neg_set, reg_param=None,
               batch_size=128, epochs=4, scale_to=4000):
-        # TODO: add assert for neg_set to have at least 10% of the pos set
         assert isinstance(pos_set, set)
         assert isinstance(neg_set, set)
 

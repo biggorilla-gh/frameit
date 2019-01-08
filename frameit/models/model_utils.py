@@ -37,7 +37,6 @@ def json_to_keras(source):
     elif isinstance(source, TextIOWrapper):
         full_desc = json.load(source)
     else:
-        # TODO: raise an exception
         return None
     weights = full_desc['weights']
     model_desc = full_desc['model']
@@ -94,7 +93,6 @@ def build_cnn_model(max_length, reg_param=0.01, lang='en'):
     new_model.add(Dense(128, activation='relu',
                         kernel_regularizer=regularizers.l2(reg_param)))
     new_model.add(Dense(2, activation='softmax'))
-    #rms = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
     rms = Adam()
     new_model.compile(loss='categorical_crossentropy',
                       optimizer=rms, metrics=['acc'])
@@ -124,7 +122,6 @@ def build_attr_cnn_model(max_length, reg_param=0.01, lang='en'):
     out = Dense(2, activation='softmax')(merged)
     model = keras.models.Model(inputs=[word_input, sent_input], outputs=out)
 
-    # rms = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
     rms = Adam()
     model.compile(loss='categorical_crossentropy',
                   optimizer=rms, metrics=['acc'])
