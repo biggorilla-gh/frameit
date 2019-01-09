@@ -6,6 +6,7 @@ Welcome to FrameIt's documentation!
    :caption: Contents:
 
    readme
+   evaluation
    modules
    contributing
    authors
