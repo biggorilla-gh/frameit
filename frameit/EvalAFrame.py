@@ -169,7 +169,7 @@ def evalFrame(frame_filename, gold_filename, verbose_frame=False, verbose_attrib
                                     print('Excusing fuzzy false positive: ')
                                     print('Sentence: ', text)
                                     print('Got {0}, wanted {1}\n'.format(extracted_token, gold_attributes[key2]))
-=                                continue
+                                continue
                         individual_attr_false_pos_count += 1
                         attr_result_dict[key3][1] += 1
                         if verbose_attribute and print_count < limit:
