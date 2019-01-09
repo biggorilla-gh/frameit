@@ -22,7 +22,7 @@ In order to ensure accurate results, we recommend training frames with a positiv
 
 
 Installation and quick start instructions
-__________________________________________
+==========================================
 After cloning the repository, set up a virtual environment. For those unfamiliar with the workflow, it is shown below.
 
 ::
