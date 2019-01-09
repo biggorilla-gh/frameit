@@ -17,7 +17,7 @@ def create_logger(name, debug=True):
 
     new_logger.addHandler(ch)
 
-    logname = 'frameit/api/logs/logs.txt'
+    logname = 'frameit/logs/logs.txt'
     logging.basicConfig(filename=logname,
                         filemode='a',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
