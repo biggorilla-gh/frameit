@@ -32,7 +32,9 @@ After cloning the repository, set up a virtual environment. For those unfamiliar
 
 
 Or 
+
 ::
+
     $ conda create --name env_frameit python=3.6
 
 ::
@@ -44,7 +46,7 @@ or (if you're using conda)
 
 ::
 
-    $ source activate framers 
+    $ source activate env_frameit 
 
 
 Install the FrameIt module
@@ -76,6 +78,7 @@ Note: The first time you run pip install in a new environment, the code will bui
 To start the jupyter server, run
 
 ::
+
     $ jupyter notebook
     
 This will create a new tab in your browser that will show the file hierarchy for your FrameIt installation. From there, just go to "Generic frame training notebooks" and open the first one, then follow the instructions there.
