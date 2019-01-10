@@ -1,6 +1,6 @@
 FrameIt
 ========
-FrameIt is a system for creating custom frames for text corpora.
+FrameIt is a system for creating custom frames for intent detection and entity extraction from sentences.
 FrameIt uses Python3 + Spacy2
 
 For an in-depth explanation of the FrameIt system architecture, please see http://www.aclweb.org/anthology/W18-6123
@@ -15,6 +15,7 @@ Features
 * SRL system allows for loading multiple Frames for intent detection simultaneously, allowing for the differentiation of similar domains
 * Easy to train and customize using jupyter notebooks
 * Evaluation scripts for convenient experimental design and iteration
+* Functions for all languages supported by Spacy2 models
 
 Data Requirements
 ------------
