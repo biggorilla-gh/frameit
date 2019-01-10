@@ -8,12 +8,14 @@ Install language files
 You can install the Spacy model for other languages similar to how you installed the English spacy model.
 
 ::
+
    $ python -m spacy download en
 
 The model names for various languages are as follows:
 
 ::
-   	'de': 'de_core_news_sm',
+
+   	    'de': 'de_core_news_sm',
             'es': 'es_core_news_sm',
             'pt': 'pt_core_news_sm',
             'it': 'it_core_news_sm',
@@ -29,17 +31,20 @@ To set a desired language, simply use the parameter “lang” and set it equal 
 Corpus initialization example
 
 :: 
+
    corpus = Corpus(corpus_file, build_index=False, lang=‘de’)
 
 Sentence initialization example
 
 ::
+
     tp = TextProcessing()
     sent = tp.nlp[‘de’](“Friedrich hat mir gestern geholfen”)
 
 SRL initialization example
 
 ::
+
    srl = SRL(lang="de")
 
 Note that Frames and SRLs are designed to be language specific: loading frames built for multiple different languages into the same SRL is not advised.
