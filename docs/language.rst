@@ -24,7 +24,7 @@ Running FrameIt in other languages
 ------------------------------------
 Language-dependent Spacy models are used when instantiating new Utterances. Thus, we need to pass a language value whenever we initialize a new Utterance or Corpus (which in turn creates Utterances). In most cases, you will only need to initialize a Corpus (as is shown in the frame training notebook tutorials). However, you may want to generate spacy embeddings for individual sentences, as seen in the lambda_rule notebook.
 
-To set a desired language, simply use the parameter “lang” and set it equal to the two-letter code for the language of your choice. If no language is provided, English will be selected by default
+To set a desired language, simply use the parameter “lang” and set it equal to the two-letter code for the language of your choice. If no language is provided, English will be selected by default. Language codes must also be provided to SRLs.
 
 Corpus initialization example
 
@@ -36,3 +36,11 @@ Sentence initialization example
 ::
     tp = TextProcessing()
     sent = tp.nlp[‘de’](“Friedrich hat mir gestern geholfen”)
+
+SRL initialization example
+
+::
+   srl = SRL(lang="de")
+
+Note that Frames and SRLs are designed to be language specific: loading frames built for multiple different languages into the same SRL is not advised.
+
