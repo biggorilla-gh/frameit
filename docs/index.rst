@@ -7,6 +7,7 @@ Welcome to FrameIt's documentation!
 
    readme
    evaluation
+   language
    modules
    contributing
    authors
