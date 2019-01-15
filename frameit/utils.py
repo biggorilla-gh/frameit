@@ -117,13 +117,12 @@ def trim_examples(positive_utterances, remove_list):
 
 def convert_data_to_xml(pos, neg, frame_name):
     root = ET.Element("root")
-    doc = ET.SubElement(root, "doc")
     for e in pos:
-        ET.SubElement(doc, "positive").text = e.text
+        ET.SubElement(root, "positive").text = e.text
     for e in neg:
-        ET.SubElement(doc, "negative").text = e.text
+        ET.SubElement(root, "negative").text = e.text
     tree = ET.ElementTree(root)
-    filename = frame_name + "_interim_data.xml"
+    filename = "../resources/" + frame_name + "_interim_data.xml"
     tree.write(filename)
     return filename
 
@@ -153,12 +152,16 @@ def save_frame_training_info_to_file(frame_name, corpus_file, positive_utterance
 def load_frame_pos_set(filename):
     with open(filename, 'r') as infile:
         loaded = json.load(infile)['positive_set']
+        print(loaded)
+        positive_list = list()
         if type(loaded) is list:
             positive_list = loaded
         else:
-            tree = ElementTree.parse(loaded)
-            pos = tree.findall("positive")
-            positive_list = [t.text for t in pos]
+            tree = ET.parse(loaded)
+            root = tree.getroot()
+            for sent in root:
+                if sent.tag == "positive":
+                    positive_list.append(sent.text)
     print('There are ' + str(len(positive_list)) + ' relevant messages in the corpus')
     positive_utterances = set()
     for item in positive_list:
@@ -266,15 +269,13 @@ def reconstruct_frame(corpus, schema):
         positive_list = schema['positive_set']
         negative_list = schema['negative_set']
     else:
-        tree = ElementTree.parse(schema['positive_set'])
-        pos = tree.findall("positive")
-        neg = tree.findall("negative")
-        positive_list = [t.text for t in pos]
-        negative_list = [t.text for t in neg]
-        for e in positive_list:
-            pos_set.add(Utterance(e, None))
-        for e in negative_list:
-            neg_set.add(Utterance(e, None))
+        tree = ET.parse(schema['positive_set'])
+        root = tree.getroot()
+        for sent in root:
+            if sent.tag == "positive":
+                pos_set.add(Utterance(sent.text, None))
+            elif sent.tag == "negative":
+                neg_set.add(Utterance(sent.text, None))
     frame.addExamples(pos_set)
     frame.trainModel(corpus, scale_to=schema['scale_to'], epochs=schema['epochs'], batch_size=schema['batch_size'],
                      reg_param=schema['reg_param'], neg_set=neg_set)
