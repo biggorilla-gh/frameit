@@ -1,16 +1,18 @@
 import os
-import tqdm
 import numpy
 import random
 import json
 import inspect
 import tensorflow as tf
+import xml.etree.cElementTree as ET
 from keras import backend
 from spacy.tokens import Token
 from tensorflow import set_random_seed
 from frameit.utterance import Utterance
 from frameit.utteraggr import UtteranceAggregator
 from frameit.text_processing import TextProcessing
+from frameit.frameattr import FrameAttribute
+from frameit.frame import Frame
 
 
 
@@ -25,25 +27,6 @@ def set_seed(seed_num):
     sess = tf.Session(graph=tf.get_default_graph(),
                       config=session_conf)
     backend.set_session(sess)
-
-
-def in_ipynb():
-    try:
-        cfg = get_ipython().config
-        if cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook':
-            return True
-        else:
-            return False
-    except NameError:
-        return False
-
-
-def log_progress(input_):
-    if in_ipynb():
-        return(tqdm.tqdm_notebook(input_))
-    else:
-        return(tqdm.tqdm(input_))
-
 
 def swap_attributes(attr_examples, other_attr_examples):
     # building a doc to attribute dictionary
@@ -132,18 +115,30 @@ def trim_examples(positive_utterances, remove_list):
     print('There are ' + str(len(new_positive_set)) + ' relevant messages in the corpus')
     return new_positive_set, negative_set
 
+def convert_data_to_xml(pos, neg, frame_name):
+    root = ET.Element("root")
+    for e in pos:
+        ET.SubElement(root, "positive").text = e.text
+    for e in neg:
+        ET.SubElement(root, "negative").text = e.text
+    tree = ET.ElementTree(root)
+    filename = "../resources/" + frame_name + "_interim_data.xml"
+    tree.write(filename)
+    return filename
+
 def save_frame_training_info_to_file(frame_name, corpus_file, positive_utterances, negative_set, 
                                     scale_to, epochs, batch_size, reg_param, filename, gold_filename):
-    pos_list = list()
-    neg_list = list()
-    for utterance in positive_utterances:
-        pos_list.append(utterance.text)
-    for utterance in negative_set:
-        neg_list.append(utterance.text)
+    xml_filename = convert_data_to_xml(positive_utterances, negative_set, frame_name)
+    # pos_list = list()
+    # neg_list = list()
+    # for utterance in positive_utterances:
+    #     pos_list.append(utterance.text)
+    # for utterance in negative_set:
+    #     neg_list.append(utterance.text)
     save_data = {"frame_name": 'your_frame',
              "corpus_file": corpus_file,
-             "positive_set": pos_list,
-             "negative_set": neg_list,
+             "positive_set": xml_filename,
+             "negative_set": xml_filename,
              "scale_to": scale_to,
              "epochs": epochs,
              "batch_size": batch_size,
@@ -156,7 +151,17 @@ def save_frame_training_info_to_file(frame_name, corpus_file, positive_utterance
 
 def load_frame_pos_set(filename):
     with open(filename, 'r') as infile:
-        positive_list = json.load(infile)['positive_set']
+        loaded = json.load(infile)['positive_set']
+        print(loaded)
+        positive_list = list()
+        if type(loaded) is list:
+            positive_list = loaded
+        else:
+            tree = ET.parse(loaded)
+            root = tree.getroot()
+            for sent in root:
+                if sent.tag == "positive":
+                    positive_list.append(sent.text)
     print('There are ' + str(len(positive_list)) + ' relevant messages in the corpus')
     positive_utterances = set()
     for item in positive_list:
@@ -205,5 +210,75 @@ def save_lambda_attr_data_to_file(attr, func, filename):
     with open(filename, 'w') as outfile:
         json.dump(attr, outfile)
     print('Saved attribute %s to file %s' % (attr['name'], filename))
+
+def train_frame_wrapper(frame_outfile_name, 
+    frame_file='frame_training_info.json', ml_attr_files=['attr1.json'], lambda_attr_files=['attr2.json']):
+    from frameit import Corpus
+    attributes = []
+    with open(frame_file, 'r') as infile:
+        frame_schema = json.load(infile)
+    gold_file = frame_schema["gold_file"]
+    corp = Corpus(frame_schema["corpus_file"])
+    print('Importing machine learning attributes')
+    for ml_attribute_file in ml_attr_files:
+        attributes.append(train_ml_attribute(corp, ml_attribute_file))
+    print('Importing lambda_rule attributes')
+    for lambda_attribute_file in lambda_attr_files:
+        attributes.append(train_lambda_attribute(corp, lambda_attribute_file))
+    print('Rebuilding frame')
+    frame = reconstruct_frame(corp, frame_schema)
+    for attr in attributes:
+        frame.addAttribute(attr)
+    print('Saving frame to file')
+    frame.save(frame_outfile_name)
+    print('Done!')
+    print("Corresponding gold file is ", gold_file)
+    return gold_file
+
+def train_ml_attribute(corpus, file):
+    with open(file, 'r') as infile:
+        schema = json.load(infile)
+    attribute = FrameAttribute(schema['name'], schema['linguistic_info'], schema['unique'])
+    reconstructed_examples = set()
+    for e in schema['examples']:
+        doc = Utterance(e[0], None).spacy
+        reconstructed_examples.add(doc[e[1]])
+    attribute.addExamples(reconstructed_examples)
+    print('Training ', schema['name'])
+    attribute.trainModel(corpus, "nocontext")
+    return attribute
+
+def train_lambda_attribute(corpus, file):
+    dummy = Utterance('silly legacy code that needs at least this many examples to run', None)
+    with open(file, 'r') as infile:
+        schema = json.load(infile)
+    attribute = FrameAttribute(schema['name'], schema['linguistic_info'], schema['unique'])
+    namespace = {}
+    model_text = schema['func']
+    name = schema['func_name']
+    print('Training ', schema['name'])
+    attribute.addExamples(dummy.spacy)
+    attribute.trainModel(corpus, type_="lambda_rules", func=model_text, func_name=name)
+    return attribute
+
+def reconstruct_frame(corpus, schema):
+    frame = Frame(schema['frame_name'])
+    pos_set = set()
+    neg_set = set()
+    if type(schema['positive_set']) is list:
+        positive_list = schema['positive_set']
+        negative_list = schema['negative_set']
+    else:
+        tree = ET.parse(schema['positive_set'])
+        root = tree.getroot()
+        for sent in root:
+            if sent.tag == "positive":
+                pos_set.add(Utterance(sent.text, None))
+            elif sent.tag == "negative":
+                neg_set.add(Utterance(sent.text, None))
+    frame.addExamples(pos_set)
+    frame.trainModel(corpus, scale_to=schema['scale_to'], epochs=schema['epochs'], batch_size=schema['batch_size'],
+                     reg_param=schema['reg_param'], neg_set=neg_set)
+    return frame
 
 
