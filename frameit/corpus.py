@@ -12,7 +12,7 @@ from whoosh.qparser import QueryParser
 from scipy.spatial.distance import cosine
 
 from frameit.utterance import Utterance
-from frameit.utils import log_progress
+from frameit.log_utils import log_progress
 from frameit.text_processing import TextProcessing
 
 
