@@ -41,7 +41,7 @@ class TextProcessing(metaclass=Singleton):
             self.nlp_dict[lang] = ja_sudachipy.Japanese().load(lang_model)
             return
         if info():
-             if lang_model not in info()['Models']:
+             if lang_model not in info()['Models'] and lang in lang_dict:
                   download(lang_model)
         self.nlp_dict[lang] = spacy.load(lang_model)
 
